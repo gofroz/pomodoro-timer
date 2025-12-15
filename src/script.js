@@ -12,8 +12,11 @@
 
     const tempoDisplay = document.getElementById("tempo-em-segundos");
     const iniciar = document.getElementById("iniciar");
+    const pause = document.getElementById("pause");
+
     let tempoRestante = 25 * 60;
     let timer = null;
+    
 
     function atualizaDisplay(){
         const minutos = Math.floor(tempoRestante / 60);
@@ -39,4 +42,11 @@
             }
         }, 1000);
     }
+     function pausado(){
+        if (timer !== null) {
+            clearInterval(timer);
+            timer = null;   
+    }
+}
    iniciar.addEventListener("click", inicio);
+   pause.addEventListener("click", pausado);
