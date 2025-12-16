@@ -1,52 +1,148 @@
-    // etapas relogio pomodoro
-    // tempo de foco: 25 minutos
-    // pausa curta: 5 minutos
-    // pausa longa: 15 minutos
-    // ciclos com pausa longa: geralmente 4 ciclos
-    // a pessoa pode gerenciar quantos ciclos deseja? sim ou não *verificar
+// etapas relogio pomodoro
+// tempo de foco: 25 minutos
+// pausa curta: 5 minutos
+// pausa longa: 15 minutos
+// ciclos com pausa longa: geralmente 4 ciclos
+// a pessoa pode gerenciar quantos ciclos deseja? sim ou não *verificar
 
-    // tempoRestante = em segundos
-    // modoAtual = foco pausaCurta pausaLonga
-    // ciclosCompletos = numero inteiro
-    // timerAtivo = true or false
+// tempoRestante = em segundos
+// modoAtual = foco pausaCurta pausaLonga
+// ciclosCompletos = numero inteiro
+// timerAtivo = true or false
 
-    const tempoDisplay = document.getElementById("tempo-em-segundos");
-    const iniciar = document.getElementById("iniciar");
-    const pause = document.getElementById("pause");
+const tempoFoco = 25 * 60
+const pausaCurta = 5 * 60
+const pausaLonga = 15 * 60
 
-    let tempoRestante = 25 * 60;
-    let timer = null;
-    
+const ciclosTotais = 4
 
-    function atualizaDisplay(){
-        const minutos = Math.floor(tempoRestante / 60);
-        const segundos = tempoRestante % 60;
-        
-        const segundosFormatados = segundos < 10 ? "0" + segundos : segundos;
+let modoAtual = "foco"
+let ciclosCompletos = 0
+let tempoRestante = tempoFoco
+let timer = null
 
-        tempoDisplay.textContent = minutos + ":" + segundosFormatados;
-    
-    }
-    function inicio(){
-        if (timer !== null) return;
+const tempoDisplay = document.getElementById("tempo-em-segundos")
+const modoDisplay = document.getElementById("modo-atual")
+const iniciar = document.getElementById("iniciar")
+iniciar.addEventListener("click", clicar)
+const reset = document.getElementById("reset")
+reset.addEventListener("click", resetar)
 
-        timer = setInterval(() => {
-            tempoRestante--;
+document.body.className = modoAtual
 
-            atualizaDisplay();
-
-            if(tempoRestante <= 0){
-                clearInterval(timer);
-                timer = null;
-                console.log("Ciclo Finalizado");
-            }
-        }, 1000);
-    }
-     function pausado(){
-        if (timer !== null) {
-            clearInterval(timer);
-            timer = null;   
-    }
+function atualizaDisplay() {
+  const minutos = Math.floor(tempoRestante / 60)
+  const segundos = tempoRestante % 60
+  tempoDisplay.textContent = `${minutos}:${segundos
+    .toString()
+    .padStart(2, "0")}`
 }
-   iniciar.addEventListener("click", inicio);
-   pause.addEventListener("click", pausado);
+function carregarTempoDoModo() {
+  if (modoAtual === "foco") {
+    tempoRestante = tempoFoco
+  } else if (modoAtual === "pausaCurta") {
+    tempoRestante = pausaCurta
+  } else {
+    tempoRestante = pausaLonga
+  }
+}
+function decidirProximoModo() {
+  if (modoAtual === "foco") {
+    ciclosCompletos++
+    if (ciclosCompletos === ciclosTotais) {
+      modoAtual = "pausaLonga"
+      ciclosCompletos = 0
+    } else {
+      modoAtual = "pausaCurta"
+    }
+  } else {
+    modoAtual = "foco"
+  }
+  carregarTempoDoModo()
+  atualizaDisplay()
+  atualizaModoDisplay()
+  atualizaModoAtual()
+}
+
+function inicio() {
+  if (timer !== null) return
+
+  timer = setInterval(() => {
+    tempoRestante--
+    atualizaDisplay()
+
+    if (tempoRestante <= 0) {
+      tempoRestante = 0
+      atualizaDisplay()
+      clearInterval(timer)
+      timer = null
+      console.log("Ciclo Finalizado")
+      decidirProximoModo()
+      atualizaTextoBotao()
+    }
+  }, 1000)
+}
+function pausado() {
+  if (timer !== null) {
+    clearInterval(timer)
+    timer = null
+  }
+}
+function clicar() {
+  if (timer == null) {
+    if (tempoRestante <= 0) {
+      carregarTempoDoModo()
+    }
+    atualizaDisplay()
+    inicio()
+  } else {
+    pausado()
+  }
+  atualizaTextoBotao()
+}
+function atualizaTextoBotao() {
+  if (timer === null) {
+    iniciar.textContent = "Iniciar"
+  } else {
+    iniciar.textContent = "Pausar"
+  }
+}
+function atualizaModoDisplay() {
+  if (modoAtual === "foco") {
+    modoDisplay.textContent = "Modo: Foco"
+  } else if (modoAtual === "pausaCurta") {
+    modoDisplay.textContent = "Modo: Pausa Curta"
+  } else {
+    modoDisplay.textContent = "Modo: Pausa Longa"
+  }
+}
+function resetar() {
+  if (timer) {
+    clearInterval(timerInterval)
+    timer = null
+    atualizaDisplay()
+  }
+  modoAtual = "foco"
+  ciclosCompletos = 0
+
+  carregarTempoDoModo()
+  atualizaDisplay()
+  atualizaTextoBotao()
+  atualizaModoAtual()
+}
+function atualizaModoAtual() {
+  if (modoAtual === "foco") {
+    modoDisplay.textContent = "Foco"
+  } else if (modoAtual === "pausaCurta") {
+    modoDisplay.textContent = "Pausa Curta"
+  } else {
+    modoDisplay.textContent = "Pausa Longa"
+  }
+}
+
+carregarTempoDoModo()
+atualizaDisplay()
+atualizaModoDisplay()
+atualizaTextoBotao()
+resetar()
+atualizaModoAtual()
