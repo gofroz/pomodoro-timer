@@ -70,10 +70,12 @@ function inicio() {
   timer = setInterval(() => {
     tempoRestante--
     atualizaDisplay()
+    atualizaTitle()
 
     if (tempoRestante <= 0) {
       tempoRestante = 0
       atualizaDisplay()
+      atualizaTitle()
       clearInterval(timer)
       timer = null
       console.log("Ciclo Finalizado")
@@ -138,6 +140,23 @@ function atualizaModoAtual() {
   } else {
     modoDisplay.textContent = "Pausa Longa"
   }
+}
+function atualizaTitle() {
+  const minutos = Math.floor(tempoRestante / 60)
+  const segundos = tempoRestante % 60
+  const tempoFormatado = `${minutos}:${segundos.toString().padStart(2, "0")}`
+
+  let modoTexto = ""
+
+  if (modoAtual === "foco") {
+    modoTexto = "Foco"
+  } else if (modoAtual === "pausaCurta") {
+    modoTexto = "Pausa Curta"
+  } else {
+    modoTexto = "Pausa Longa"
+  }
+
+  document.title = `Pomodoro: ${tempoFormatado} - ${modoTexto}`
 }
 
 carregarTempoDoModo()
