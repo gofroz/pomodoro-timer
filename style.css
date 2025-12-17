@@ -24,7 +24,7 @@ body {
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: none;
-  overscroll-behavior-y: none;
+  /*overscroll-behavior-y: none;*/
 }
 body.foco #tempoSelecionado {
   border: 2px solid #e7d000;
