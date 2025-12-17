@@ -23,12 +23,38 @@
   </head>
   <body>
     <div id="container">
-      <p></p>
-      <div id="tempo-em-segundos"><h1></h1></div>
-      <p id="modo-atual"></p>
-      <button id="iniciar">Iniciar / Continuar</button>
-      <button id="reset">Resetar</button>
+      <div id="tempo-em-segundos"></div>
+      <div id="estado"><p id="modo-atual"></p></div>
+      <div id="acoes">
+        <button id="iniciar">Iniciar / Continuar</button>
+        <button id="reset">Reiniciar</button>
+      </div>
+      <div id="text-config">
+        <p>Configure o tempo desejado:</p>
+      </div>
+      <div id="configurar">
+        <button id="configurar" aria-label="Configurações">
+          <ion-icon name="cog-outline"></ion-icon>
+        </button>
+      </div>
+      <div class="selecionar-tempo" id="box-tempo">
+        <label for="tempoSelecionado"> Escolha o tempo desejado:</label>
+        <select id="tempoSelecionado">
+          <option value="25">25 min</option>
+          <option value="35">35 min</option>
+          <option value="45">45 min</option>
+          <option value="55">55 min</option>
+        </select>
+      </div>
     </div>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
     <script src="./src/script.js"></script>
   </body>
 </html>
