@@ -231,3 +231,21 @@ body.pausaLonga #tempo-em-segundos {
     opacity: 1;
   }
 }
+#tempo-em-segundos.tick {
+  animation: tick 0.15s ease;
+}
+
+@keyframes tick {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.04);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

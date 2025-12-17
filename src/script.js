@@ -88,7 +88,7 @@ function inicio() {
       decidirProximoModo()
       atualizaTextoBotao()
     }
-  }, 2)
+  }, 1000)
 }
 function pausado() {
   if (timer !== null) {
