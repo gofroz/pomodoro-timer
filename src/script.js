@@ -4,13 +4,22 @@
 // pausa longa: 15 minutos
 // ciclos com pausa longa: geralmente 4 ciclos
 // a pessoa pode gerenciar quantos ciclos deseja? sim ou não *verificar
+const tempoDisplay = document.getElementById("tempo-em-segundos")
+const modoDisplay = document.getElementById("modo-atual")
+const iniciar = document.getElementById("iniciar")
+const reset = document.getElementById("reset")
+const selectTempo = document.getElementById("tempoSelecionado")
+const boxTempo = document.getElementById("box-tempo")
+const btnConfig = document.getElementById("configurar")
 
-// tempoRestante = em segundos
-// modoAtual = foco pausaCurta pausaLonga
-// ciclosCompletos = numero inteiro
-// timerAtivo = true or false
+iniciar.addEventListener("click", clicar)
+reset.addEventListener("click", resetar)
+selectTempo.addEventListener("change", configuracao)
+btnConfig.addEventListener("click", () => {
+  boxTempo.classList.toggle("ativo")
+})
 
-const tempoFoco = 25 * 60
+let tempoFoco = 25 * 60
 const pausaCurta = 5 * 60
 const pausaLonga = 15 * 60
 
@@ -21,15 +30,13 @@ let ciclosCompletos = 0
 let tempoRestante = tempoFoco
 let timer = null
 
-const tempoDisplay = document.getElementById("tempo-em-segundos")
-const modoDisplay = document.getElementById("modo-atual")
-const iniciar = document.getElementById("iniciar")
-iniciar.addEventListener("click", clicar)
-const reset = document.getElementById("reset")
-reset.addEventListener("click", resetar)
-
 document.body.className = modoAtual
+selectTempo.value = tempoFoco / 60
 
+function aplicarModo() {
+  document.body.classList.remove("foco", "pausaCurta", "pausaLonga")
+  document.body.classList.add(modoAtual)
+}
 function atualizaDisplay() {
   const minutos = Math.floor(tempoRestante / 60)
   const segundos = tempoRestante % 60
@@ -59,8 +66,8 @@ function decidirProximoModo() {
     modoAtual = "foco"
   }
   carregarTempoDoModo()
+  aplicarModo()
   atualizaDisplay()
-  atualizaModoDisplay()
   atualizaModoAtual()
 }
 
@@ -78,11 +85,10 @@ function inicio() {
       atualizaTitle()
       clearInterval(timer)
       timer = null
-      console.log("Ciclo Finalizado")
       decidirProximoModo()
       atualizaTextoBotao()
     }
-  }, 1000)
+  }, 2)
 }
 function pausado() {
   if (timer !== null) {
@@ -105,8 +111,11 @@ function clicar() {
 function atualizaTextoBotao() {
   if (timer === null) {
     iniciar.textContent = "Iniciar"
+
+    selectTempo.disabled = false
   } else {
     iniciar.textContent = "Pausar"
+    selectTempo.disabled = true
   }
 }
 function atualizaModoDisplay() {
@@ -120,7 +129,7 @@ function atualizaModoDisplay() {
 }
 function resetar() {
   if (timer) {
-    clearInterval(timerInterval)
+    clearInterval(timer)
     timer = null
     atualizaDisplay()
   }
@@ -128,13 +137,14 @@ function resetar() {
   ciclosCompletos = 0
 
   carregarTempoDoModo()
+  aplicarModo()
   atualizaDisplay()
   atualizaTextoBotao()
   atualizaModoAtual()
 }
 function atualizaModoAtual() {
   if (modoAtual === "foco") {
-    modoDisplay.textContent = "Foco"
+    modoDisplay.textContent = "Modo Foco"
   } else if (modoAtual === "pausaCurta") {
     modoDisplay.textContent = "Pausa Curta"
   } else {
@@ -149,19 +159,28 @@ function atualizaTitle() {
   let modoTexto = ""
 
   if (modoAtual === "foco") {
-    modoTexto = "Foco"
+    modoTexto = "Modo Foco"
   } else if (modoAtual === "pausaCurta") {
     modoTexto = "Pausa Curta"
   } else {
     modoTexto = "Pausa Longa"
   }
-
   document.title = `Pomodoro: ${tempoFormatado} - ${modoTexto}`
 }
+function configuracao() {
+  const novoTempo = Number(selectTempo.value)
+  tempoFoco = novoTempo * 60
 
+  if (modoAtual === "foco") {
+    tempoRestante = tempoFoco
+    atualizaDisplay()
+  }
+  selectTempo.classList.add("tempoSelecionado")
+}
 carregarTempoDoModo()
 atualizaDisplay()
 atualizaModoDisplay()
 atualizaTextoBotao()
 resetar()
 atualizaModoAtual()
+aplicarModo()
