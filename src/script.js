@@ -33,11 +33,11 @@ let timer = null
 document.body.className = modoAtual
 selectTempo.value = tempoFoco / 60
 
-function aplicarModo() {
+const aplicarModo = () => {
   document.body.classList.remove("foco", "pausaCurta", "pausaLonga")
   document.body.classList.add(modoAtual)
 }
-function atualizaDisplay() {
+const atualizaDisplay = () => {
   const minutos = Math.floor(tempoRestante / 60)
   const segundos = tempoRestante % 60
   tempoDisplay.textContent = `${minutos}:${segundos
